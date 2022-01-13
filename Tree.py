@@ -24,7 +24,7 @@ class Tree:
             self._right = y
                     
         def __repr__(self):
-            return str(self._value)#'<Lvl: {}, Value: {}>'.format(self._level, self._value)
+            return str(self._value)
         
         def __int__(self):
             return self._value
@@ -50,9 +50,8 @@ class Tree:
             
         self.determinator()
         
-        self._root = self.objects['0'][0]
+        self._root = self[0]
         self._end = self._leaves_num[-1]
-        print(self._end)
         self.current_index = -1
         
     def __len__(self):
@@ -110,6 +109,7 @@ class Tree:
     def append(self, value):
         print('You added {}'.format(value))
         self.indexCheck(0)
+        
         try:
             value = int(value)
             if value < 0:
@@ -124,45 +124,39 @@ class Tree:
             print('ValueError:', error)
         else:
             self.indexCheck(0)
+            if value > self._end:
+                self._end = value
+                #self.addNode()
             self.findPlace(value)
         
         
     def findPlace(self, value: int):
-        try:
             node = next(self)
             if node:
                 if node._value > value:
                     old = int(node._value)
                     node._value = value
                     value = old
-
+                    
+                return self.findPlace(value)    
             else:
                 self._lenght += 1
                 self.indexCheck(0)
-                while True:
-                    node = next(self)
-                    
-                    if node._left == None:
-                        node = next(self)
-                        print('None is', node, node._left, node._right)
-                        print('==============', node._left)
-                        node._left = Tree._Node(node._lvl + 1, self._end._value)
-                        print('None is', node, node._left, node._right)
-                        return
-                    
-                    elif node._right == None:
-                        node = next(self)
-                        print('None is', node, node._left, node._right)
-                        print('==============', node._right)
-                        node._right = Tree._Node(node._lvl + 1, self._end._value)
-                        print('None is', node, node._left, node._right)
-                        return
-                
-        except AttributeError or StopIteration:
-            return None
-        else:
-            return self.findPlace(value)
+                self.addNode()
+            
         
+    def addNode(self):
+        node = next(self)
+        
+        if node._left == None:
+            node._left = self._Node(node._level + 1, self._end)
+            return
+        
+        elif node._right == None:
+            node._right = self._Node(node._level + 1, self._end)
+            return 
+        
+        return self.addNode()
         
     def indexCheck(self, index):
         if index == 0:
@@ -200,7 +194,7 @@ class Tree:
                 place = (self._leaves_num.index(node._value) - 2**node._level + 1)*2
                 node.nodes(self.getNode(i, place), self.getNode(i, place+1))
                 
-    def printLeaves(self):
+    def leavesPrint(self):
         print('----------------------------------')
         for i in self.objects:
             for node in self.objects[i]: 
@@ -224,7 +218,7 @@ class Tree:
     def recursionPrint(self, index=0, space_count=50):
         self.indexCheck(index)
         node = next(self)
-        if node != None:
+        if node:
             for n in self.two_square:
                 if index + 1 == n:
                     print('\n')
@@ -233,6 +227,8 @@ class Tree:
             print('{}'.format(node._value), end=' ')
             if index < len(self) - 1:
                 self.recursionPrint(index + 1, space_count)
+            else:
+                print('\n')
                 
 def test1():
     while True:
@@ -246,6 +242,7 @@ def test1():
             
 def test2():
     i = 0
+    tree.indexCheck(0)
     while True:
         try:
             print(tree[i])
@@ -265,20 +262,11 @@ def test3():
         
         
 tree = Tree()
-#tree.printLeaves()
-#tree.iterationPrint()
 tree.recursionPrint()
-print('\n')
-
-# tree.indexCheck(0)
-x = 111
-print(tree.find(x))
-test2()
-tree.append(x)
-test2()
-print('\n')
-
+tree.append(11)
+tree.append(111)
+tree.append(1111)
+tree.append(11111)
 tree.recursionPrint()
-print('\n')
-print(tree.find(x))
+
 
