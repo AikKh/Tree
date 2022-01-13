@@ -3,8 +3,8 @@ import random
 
 class Tree:
     
-    _leaves_num = list(random.sample(range(1000), random.randint(10, 50)))
-    _leaves_num.sort()
+    _leaves_num = None#list(random.sample(range(1000), random.randint(10, 50)))
+    
     two_square = [2**i for i in range(10)]
     level_list = []
     objects = {}
@@ -30,7 +30,10 @@ class Tree:
             return self._value
 
 
-    def __init__(self):
+    def __init__(self, leaves: list):
+        
+        self._leaves_num = leaves
+        self._leaves_num.sort()
         
         self._lenght = len(self._leaves_num)
         
@@ -97,6 +100,10 @@ class Tree:
             return
         else:
             return res
+        
+    def __repr__(self) -> str:
+        self.recursionPrint()
+        return str()
     
     def index(self, value: int):
         index = 0
@@ -107,7 +114,7 @@ class Tree:
                 index += 1
         
     def append(self, value):
-        print('You added {}'.format(value))
+        #print('You added {}'.format(value))
         self.indexCheck(0)
         
         try:
@@ -126,7 +133,6 @@ class Tree:
             self.indexCheck(0)
             if value > self._end:
                 self._end = value
-                #self.addNode()
             self.findPlace(value)
         
         
@@ -194,26 +200,6 @@ class Tree:
                 place = (self._leaves_num.index(node._value) - 2**node._level + 1)*2
                 node.nodes(self.getNode(i, place), self.getNode(i, place+1))
                 
-    def leavesPrint(self):
-        print('----------------------------------')
-        for i in self.objects:
-            for node in self.objects[i]: 
-                #if node._right is not None or node._right is not None:
-                    print('<<{}>>'.format(node._value), node._left, node._right)
-                    
-    def iterationPrint(self):
-        space_count = 50
-        
-        for l in self.objects:
-            print(space_count*' ')
-            for obj in self.objects[l]:
-                if self.objects[l].index(obj) == 0:
-                    print(space_count*' ', obj, end='  ')
-                    continue
-                print(obj, end='  ')
-            print('\n')
-            space_count -= 3*(int(l)+1)
-            
             
     def recursionPrint(self, index=0, space_count=50):
         self.indexCheck(index)
@@ -230,43 +216,6 @@ class Tree:
             else:
                 print('\n')
                 
-def test1():
-    while True:
-        try:
-            num = input('Nuber:')
-            if num == 'break':
-                break
-            print(tree.find(int(num)))
-        except ValueError:
-            print('Invalid, try again')
-            
-def test2():
-    i = 0
-    tree.indexCheck(0)
-    while True:
-        try:
-            print(tree[i])
-            i += 1
-        except StopIteration:
-            print('Stop', 'Len:', i) 
-            break
-        
-def test3():
-    tree.indexCheck(0)
-    while True:
-        try:
-            print(next(tree))
-        except StopIteration:
-            print('Stop')
-            break
-        
-        
-tree = Tree()
-tree.recursionPrint()
-tree.append(11)
-tree.append(111)
-tree.append(1111)
-tree.append(11111)
-tree.recursionPrint()
+
 
 
