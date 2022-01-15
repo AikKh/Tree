@@ -1,4 +1,5 @@
 import random
+from typing import overload
 
 
 class Tree:
@@ -124,8 +125,8 @@ class Tree:
                 return
             
             check = self.find(value)
-            if check[4] == 'r':
-                print('Already in level {}'.format(check[-1]))
+            if check[1]:
+                print('Already in level {}'.format(check[0][-1]))
                 return
         except ValueError as error:
             print('ValueError:', error)
@@ -134,6 +135,25 @@ class Tree:
             if value > self._end:
                 self._end = value
             self.findPlace(value)
+            
+    def remove(self, value):
+        try:
+            value = int(value)
+            if value < 0:
+                print('Only positive values')
+                return
+            
+            check = self.find(value)
+            if not check[1]:
+                print(check[0])
+                return
+        except ValueError as error:
+            print('ValueError:', error)
+        else:
+            self.indexCheck(0)
+            self._lenght -= 1
+            self.removeNode(value)
+            
         
         
     def findPlace(self, value: int):
@@ -163,7 +183,24 @@ class Tree:
             return 
         
         return self.addNode()
-        
+    
+    def removeNode(self, value):
+        node = next(self)
+        if node:
+            if node._value == value:
+                node._value = self[self.current_index + 1]._value
+                self[self.current_index + 1]._value = None
+            elif node._value == None:
+                try:
+                    node._value = int(self[self.current_index + 1]._value)
+                    self[self.current_index + 1]._value = None
+                except StopIteration:
+                    node._value = self._end
+                    return
+        else:
+            return
+        return self.removeNode(value)
+            
     def indexCheck(self, index):
         if index == 0:
             self.current_index = -1
@@ -174,11 +211,11 @@ class Tree:
         node = next(self)
         int_node = int(node._value)
         if int_node == value:
-            return 'The {} in level N-{}'.format(value, node._level)
+            return ('The {} in level N-{}'.format(value, node._level), True)
         elif index < len(self) - 1:
             return self.find(value, index + 1)
         else:
-            return 'There is no {}'.format(value)
+            return('There is no {}'.format(value), False)
             
         
     def getLength(self):
