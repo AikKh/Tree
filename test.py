@@ -1,11 +1,7 @@
 from Tree import Tree
 
-tree = Tree([0])
+tree = Tree(range(0, 51))
 
-for i in range(4, 51, 2):
-    tree.append(i)
 print(tree)
-
-for i in range(12, 41, 2):
-    tree.remove(i)
+tree.replace(52, 111)
 print(tree)

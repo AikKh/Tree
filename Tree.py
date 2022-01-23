@@ -33,7 +33,7 @@ class Tree:
 
     def __init__(self, leaves: list):
         
-        self._leaves_num = leaves
+        self._leaves_num = list(leaves)
         self._leaves_num.sort()
         
         self._lenght = len(self._leaves_num)
@@ -216,7 +216,35 @@ class Tree:
             return self.find(value, index + 1)
         else:
             return('There is no {}'.format(value), False)
+        
+    def replace(self, the_value, to_value):
+        try:
+            the_value = int(the_value)
+            to_value = int(to_value)
+            if the_value < 0 or to_value < 0:
+                print('Only positive values')
+                return
             
+            check = self.find(the_value)
+            if not check[1]:
+                print(check[0])
+                return
+        except ValueError as error:
+            print('ValueError:', error)
+        else:
+            self.indexCheck(0)
+            self.replaceValue(the_value, to_value)
+        
+    def replaceValue(self, the_value, to_value):
+        node = next(self)
+        try:
+            if node._value == the_value:
+                node._value = to_value
+            else:
+                return self.replaceValue(the_value, to_value)
+        except StopIteration:
+            print('There is no {}'.format(the_value))
+            return
         
     def getLength(self):
         list_len = len(self._leaves_num)
